@@ -1,0 +1,1883 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Data Doesn't Lie</title>
+
+  <!-- Reveal.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css" id="theme">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================================
+       SORTLIST DESIGN TOKENS
+       ============================================================ */
+    :root {
+      --sl-primary: #200DF2;
+      --sl-primary-900: #020219;
+      --sl-secondary-950: #0F0D0A;
+      --sl-secondary-800: #2A2521;
+      --sl-secondary-700: #463F39;
+      --sl-secondary-500: #706862;
+      --sl-secondary-400: #B8AFA8;
+      --sl-secondary-300: #E7DFDA;
+      --sl-secondary-200: #F1EDEA;
+      --sl-secondary-100: #FBFAF9;
+      --sl-danger: #BD0F58;
+      --sl-success: #5C9550;
+      --sl-white: #FFFFFF;
+
+      /* Spacing */
+      --content-gap: 1em;
+      --slide-pad-v: clamp(32px, 5vh, 64px);
+      --slide-pad-h: clamp(40px, 5.5vw, 88px);
+
+      /* Radii */
+      --radius-card: 12px;
+      --radius-banner: 16px;
+    }
+
+    /* ============================================================
+       REVEAL OVERRIDES
+       ============================================================ */
+    html, body {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
+    }
+
+    .reveal-viewport { background: var(--sl-secondary-100); }
+
+    .reveal {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 400;
+      color: var(--sl-secondary-700);
+      font-size: clamp(14px, 1.6vw, 28px);
+    }
+
+    .reveal .slides { width: 100% !important; height: 100% !important; }
+
+    .reveal .slides section {
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: 100vw;
+      max-height: 100vh;
+      overflow: hidden;
+      text-align: left;
+      padding: var(--slide-pad-v) var(--slide-pad-h);
+      box-sizing: border-box;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .reveal .slides section.center-slide {
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Vertically centered but left-aligned text */
+    .reveal .slides section.vcenter-slide {
+      justify-content: center;
+    }
+
+    /* ============================================================
+       TYPOGRAPHY
+       ============================================================ */
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 700;
+      font-style: normal;
+      text-transform: none;
+      letter-spacing: -0.01em;
+      color: var(--sl-primary-900);
+      line-height: 1.15;
+      text-shadow: none;
+    }
+
+    .reveal h1 { font-size: clamp(1.6em, 3.2vw, 2.8em); margin-bottom: 0.3em; }
+    .reveal h2 { font-size: clamp(1.3em, 2.4vw, 2em); margin-bottom: 0.4em; }
+    .reveal h3 { font-size: clamp(1em, 1.6vw, 1.4em); margin-bottom: 0.3em; font-weight: 400; }
+
+    .reveal p {
+      line-height: 1.65;
+      margin-bottom: 0.6em;
+      font-size: clamp(0.75em, 1.2vw, 1.05em);
+    }
+
+    /* Standardized body text */
+    .body-text    { font-size: 0.95em; line-height: 1.65; color: var(--sl-secondary-700); }
+    .body-text-sm { font-size: 0.85em; line-height: 1.65; color: var(--sl-secondary-700); }
+
+    /* ============================================================
+       DARK SLIDE VARIANT
+       ============================================================ */
+    section.dark-slide,
+    .reveal .slides section.dark-slide {
+      background: var(--sl-primary-900) !important;
+      color: var(--sl-secondary-300);
+    }
+    .reveal .slides section.dark-slide h1,
+    .reveal .slides section.dark-slide h2,
+    .reveal .slides section.dark-slide h3 {
+      color: var(--sl-white);
+    }
+    .dark-slide .section-label { color: rgba(32, 13, 242, 0.7); }
+    .dark-slide .muted { color: var(--sl-secondary-500); }
+    .dark-slide .emphasis { color: var(--sl-white); }
+    .dark-slide .stat-box {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.08);
+    }
+    .dark-slide .stat-box .stat-value { color: var(--sl-white); }
+    .dark-slide .thesis-banner {
+      background: linear-gradient(135deg, rgba(32,13,242,0.15), rgba(189,15,88,0.08));
+      border-color: rgba(32,13,242,0.25);
+    }
+    .dark-slide .takeaway-num { color: var(--sl-primary); }
+
+    /* ============================================================
+       UTILITY CLASSES
+       ============================================================ */
+    .accent    { color: var(--sl-primary); }
+    .danger    { color: var(--sl-danger); }
+    .success   { color: var(--sl-success); }
+    .muted     { color: var(--sl-secondary-500); }
+    .emphasis  { color: var(--sl-primary-900); }
+
+    .text-sm { font-size: 0.8em; }
+    .text-xs { font-size: 0.68em; }
+    .text-lg { font-size: 1.15em; }
+
+    .font-medium   { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .font-bold     { font-weight: 700; }
+
+    .mt-0 { margin-top: 0; }
+    .mt-1 { margin-top: 0.5em; }
+    .mt-2 { margin-top: 1em; }
+    .mt-3 { margin-top: 1.5em; }
+    .mb-0 { margin-bottom: 0; }
+    .mb-1 { margin-bottom: 0.5em; }
+    .mb-2 { margin-bottom: 1em; }
+
+    /* Content width wrappers */
+    .content-wide   { max-width: 80%; margin-left: auto; margin-right: auto; }
+    .content-medium { max-width: 70%; margin-left: auto; margin-right: auto; }
+    .content-narrow { max-width: 55%; margin-left: auto; margin-right: auto; }
+    .content-left   { margin-left: 0; margin-right: 0; }
+    .text-center     { text-align: center; }
+
+    /* ============================================================
+       SECTION LABEL
+       ============================================================ */
+    .section-label {
+      font-size: 0.65em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--sl-primary);
+      margin-bottom: 0.3em;
+    }
+
+    /* ============================================================
+       QUOTE BLOCK
+       ============================================================ */
+    .brief-quote {
+      border-left: 4px solid var(--sl-primary);
+      padding: 0.6em 1.2em;
+      margin: 0.8em 0;
+      background: rgba(32, 13, 242, 0.04);
+      border-radius: 0 var(--radius-card) var(--radius-card) 0;
+      font-style: italic;
+      font-size: clamp(0.85em, 1.3vw, 1.15em);
+      line-height: 1.65;
+      color: var(--sl-secondary-700);
+    }
+    .dark-slide .brief-quote {
+      background: rgba(32, 13, 242, 0.08);
+      color: var(--sl-secondary-300);
+    }
+
+    /* ============================================================
+       DATA TABLES
+       ============================================================ */
+    .data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: clamp(0.65em, 1.1vw, 0.95em);
+      margin: 0.6em 0;
+    }
+    .data-table td {
+      padding: 0.6em 0.8em;
+      border-bottom: 1px solid var(--sl-secondary-200);
+      vertical-align: middle;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table .num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-family: 'Inter', monospace;
+    }
+    .data-table .highlight-row td { background: rgba(32, 13, 242, 0.04); }
+
+    /* ============================================================
+       STAT GRID
+       ============================================================ */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(0.6em, 1.2vw, 1.4em);
+      margin-top: var(--content-gap);
+    }
+    .stat-grid--centered { margin-left: auto; margin-right: auto; }
+    .stat-grid--2col { grid-template-columns: repeat(2, 1fr); max-width: 65%; }
+
+    .stat-box {
+      background: var(--sl-white);
+      border: 1px solid var(--sl-secondary-300);
+      border-radius: var(--radius-card);
+      padding: clamp(0.6em, 1.5vh, 1.2em) clamp(0.6em, 1.2vw, 1.2em);
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .stat-box .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4em, 2.8vw, 2.4em);
+      font-weight: 700;
+      color: var(--sl-primary-900);
+      line-height: 1.1;
+    }
+    .stat-box .stat-label {
+      font-size: 0.78em;
+      color: var(--sl-secondary-500);
+      margin-top: 0.3em;
+    }
+    .stat-box--spaced { margin-bottom: 0.8em; }
+
+    /* Stat value color modifiers */
+    .stat-value--success { color: var(--sl-success) !important; }
+    .stat-value--danger  { color: var(--sl-danger) !important; }
+    .stat-value--accent  { color: var(--sl-primary) !important; }
+
+    /* ============================================================
+       TWO COLUMN
+       ============================================================ */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(1em, 2.5vw, 2.5em);
+      align-items: start;
+      margin-top: var(--content-gap);
+      flex-grow: 1;
+      align-content: center;
+    }
+
+    /* Column sub-headers */
+    .col-header {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82em;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--sl-secondary-500);
+      margin-bottom: 0.6em;
+    }
+
+    /* ============================================================
+       THESIS BANNER
+       ============================================================ */
+    .thesis-banner {
+      background: linear-gradient(135deg, rgba(32,13,242,0.06), rgba(189,15,88,0.03));
+      border: 1px solid rgba(32,13,242,0.12);
+      border-radius: var(--radius-banner);
+      padding: clamp(1.2em, 2.5vh, 2.2em) clamp(1.4em, 3vw, 2.6em);
+      margin: 0.8em 0;
+      text-align: center;
+    }
+    .thesis-title {
+      line-height: 1.25;
+      margin-bottom: 0.3em;
+    }
+    .thesis-highlight {
+      line-height: 1.25;
+      color: var(--sl-primary);
+    }
+    .thesis-recap {
+      font-size: 1.1em;
+      margin: 0;
+    }
+    .dark-slide .thesis-recap { color: var(--sl-white); }
+    .thesis-recap strong { color: var(--sl-primary); }
+
+    /* ============================================================
+       BIAS DISCLAIMER
+       ============================================================ */
+    .bias-box {
+      background: rgba(189,15,88,0.04);
+      border: 1px solid rgba(189,15,88,0.12);
+      border-radius: var(--radius-card);
+      padding: clamp(0.5em, 1.2vh, 0.9em) clamp(0.8em, 1.5vw, 1.2em);
+      margin-top: clamp(0.6em, 1.2vh, 1em);
+      font-size: 0.82em;
+      line-height: 1.55;
+    }
+
+    /* ============================================================
+       HYPOTHESIS BOX
+       ============================================================ */
+    .hypothesis-box {
+      background: rgba(189, 15, 88, 0.04);
+      border: 1px solid rgba(189, 15, 88, 0.15);
+      border-radius: var(--radius-card);
+      padding: clamp(0.8em, 1.5vh, 1.5em) clamp(1em, 2vw, 1.8em);
+      margin-top: var(--content-gap);
+    }
+    .hypothesis-box .hypothesis-label {
+      font-size: 0.68em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--sl-danger);
+      margin-bottom: 0.6em;
+    }
+
+    /* ============================================================
+       ACTION CARD
+       ============================================================ */
+    .action-card {
+      background: rgba(32, 13, 242, 0.03);
+      border: 1px solid rgba(32, 13, 242, 0.12);
+      border-radius: var(--radius-card);
+      padding: clamp(0.3em, 0.6vh, 0.5em) clamp(0.6em, 1.2vw, 1.2em);
+      margin-top: clamp(0.3em, 0.5vh, 0.4em);
+    }
+    .action-card:first-of-type { margin-top: var(--content-gap); }
+    .action-card .body-text-sm { font-size: 0.78em; line-height: 1.5; }
+
+    /* ============================================================
+       FLOOR GRID (Slide 5) + RESHUFFLE (Slide 7) shared card style
+       ============================================================ */
+    .floor-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 1fr 1fr;
+      gap: clamp(0.4em, 0.8vw, 0.7em);
+      margin-top: var(--content-gap);
+      flex-grow: 1;
+    }
+    .floor-card {
+      background: var(--sl-white);
+      border: 1px solid var(--sl-secondary-300);
+      border-radius: var(--radius-card);
+      padding: clamp(0.5em, 1.2vh, 1em) clamp(0.6em, 1vw, 1em);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+    .floor-card--up     { border-left: 3px solid var(--sl-success); }
+    .floor-card--down   { border-left: 3px solid var(--sl-danger); }
+    .floor-card--flat   { border-left: 3px solid var(--sl-secondary-400); }
+    .floor-card--accent { border-left: 3px solid var(--sl-primary); }
+
+    .floor-card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(0.8em, 1.4vw, 1.15em);
+      font-weight: 700;
+      color: var(--sl-primary-900);
+      line-height: 1.15;
+      margin-bottom: clamp(0.15em, 0.3vh, 0.25em);
+    }
+    .floor-card-why {
+      font-size: clamp(0.55em, 0.95vw, 0.8em);
+      color: var(--sl-secondary-700);
+      line-height: 1.55;
+      flex-grow: 1;
+    }
+    .floor-card-data {
+      font-size: clamp(0.5em, 0.8vw, 0.7em);
+      color: var(--sl-secondary-400);
+      font-variant-numeric: tabular-nums;
+      margin-top: clamp(0.4em, 0.7vh, 0.6em);
+      padding-top: clamp(0.3em, 0.5vh, 0.45em);
+      border-top: 1px solid var(--sl-secondary-200);
+    }
+
+    /* ============================================================
+       RESHUFFLE CARDS (Slide 7)
+       ============================================================ */
+    .reshuffle-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 0.6em;
+      flex-grow: 1;
+    }
+    .reshuffle-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .reshuffle-header {
+      font-size: clamp(0.5em, 0.72vw, 0.6em);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: clamp(0.1em, 0.2vh, 0.15em);
+      margin-top: clamp(0.15em, 0.3vh, 0.25em);
+    }
+    .reshuffle-group:first-child .reshuffle-header { margin-top: 0; }
+    .reshuffle-row {
+      display: grid;
+      gap: clamp(0.3em, 0.7vw, 0.6em);
+      flex: 1;
+    }
+    .reshuffle-row--4 { grid-template-columns: repeat(4, 1fr); }
+    .reshuffle-row--3 { grid-template-columns: repeat(3, 1fr); }
+
+    /* ============================================================
+       COMPACT BRIEF ROWS
+       ============================================================ */
+    .brief-stack {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.35em, 0.7vh, 0.6em);
+      margin-top: var(--content-gap);
+      flex-grow: 1;
+      justify-content: center;
+    }
+    .brief-row {
+      background: var(--sl-white);
+      border: 1px solid var(--sl-secondary-300);
+      border-left: 3px solid var(--sl-primary);
+      border-radius: 0 var(--radius-card) var(--radius-card) 0;
+      padding: clamp(0.4em, 0.8vh, 0.7em) clamp(0.6em, 1.2vw, 1em);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.2em, 0.4vh, 0.35em);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .brief-row--signal { border-left-color: var(--sl-success); }
+    .brief-row-quote {
+      font-size: clamp(0.7em, 1.1vw, 0.95em);
+      font-style: italic;
+      color: var(--sl-secondary-700);
+      line-height: 1.5;
+    }
+    .brief-row-tags {
+      display: flex;
+      gap: clamp(0.5em, 1vw, 0.9em);
+      font-size: clamp(0.55em, 0.85vw, 0.72em);
+      color: var(--sl-secondary-500);
+      white-space: nowrap;
+      padding-top: clamp(0.25em, 0.4vh, 0.4em);
+      border-top: 1px solid var(--sl-secondary-200);
+    }
+    .brief-row-tags strong {
+      color: var(--sl-primary-900);
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       FLOW LAYOUT (Slide 11)
+       ============================================================ */
+    .flow-layout {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.6em, 1.5vw, 1.8em);
+      margin-top: var(--content-gap);
+      justify-content: center;
+    }
+    .flow-layout .stat-box {
+      flex: 1;
+      max-width: 26%;
+      padding: clamp(1.2em, 2.5vh, 2em) clamp(1em, 2vw, 2em);
+    }
+    .flow-layout .stat-box .stat-value {
+      font-size: clamp(1.1em, 2vw, 1.7em);
+    }
+    .flow-arrow {
+      font-size: clamp(1.2em, 2.2vw, 2.2em);
+      color: var(--sl-secondary-400);
+      display: flex;
+      align-items: center;
+    }
+
+    /* ============================================================
+       TAKEAWAY LIST (Slide 14)
+       ============================================================ */
+    .takeaway-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.4em 1em;
+      font-size: 0.95em;
+      line-height: 1.65;
+    }
+    .takeaway-num {
+      font-weight: 600;
+      color: var(--sl-primary);
+    }
+
+    /* ============================================================
+       SPEAKER LAYOUT (Slide 2)
+       ============================================================ */
+    .speaker-layout {
+      display: flex;
+      align-items: center;
+      gap: clamp(2em, 5vw, 5em);
+      flex-grow: 1;
+    }
+    .speaker-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .speaker-photo {
+      flex-shrink: 0;
+      width: clamp(180px, 22vw, 320px);
+      height: clamp(180px, 22vw, 320px);
+      border-radius: var(--radius-card);
+      object-fit: cover;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    /* ============================================================
+       CREDIBILITY LAYOUT (Slide 3)
+       ============================================================ */
+    .credibility-layout {
+      display: flex;
+      gap: clamp(1.5em, 3vw, 3em);
+      margin-top: var(--content-gap);
+      flex-grow: 1;
+      align-items: stretch;
+    }
+    .credibility-left {
+      flex: 1.1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .credibility-left .stat-grid {
+      margin-top: var(--content-gap);
+    }
+    .logo-panel {
+      flex: 0.9;
+      background: var(--sl-primary-900);
+      border-radius: var(--radius-card);
+      padding: clamp(1.2em, 2.5vw, 2.4em);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: clamp(0.8em, 1.5vh, 1.2em);
+    }
+    .logo-panel-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(32, 13, 242, 0.7);
+      margin-bottom: 0.2em;
+    }
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: clamp(0.4em, 0.7vh, 0.6em) 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .profile-row:last-child { border-bottom: none; }
+    .profile-row-label {
+      font-size: clamp(0.6em, 0.95vw, 0.82em);
+      color: var(--sl-secondary-400);
+    }
+    .profile-row-value {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(0.8em, 1.3vw, 1.1em);
+      font-weight: 700;
+      color: var(--sl-white);
+    }
+
+    /* ============================================================
+       PRODUCT FLOW (Slide 3b)
+       ============================================================ */
+    .product-flow {
+      display: flex;
+      align-items: stretch;
+      gap: clamp(0.5em, 1.2vw, 1.5em);
+      margin-top: var(--content-gap);
+      flex-grow: 1;
+      justify-content: center;
+    }
+    .flow-step {
+      background: var(--sl-white);
+      border: 1px solid var(--sl-secondary-300);
+      border-radius: var(--radius-card);
+      padding: clamp(0.8em, 1.5vh, 1.4em) clamp(0.8em, 1.4vw, 1.4em);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 30%;
+    }
+    .flow-step-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      margin-bottom: clamp(0.4em, 0.8vh, 0.7em);
+    }
+    .flow-step-num {
+      width: clamp(18px, 1.6vw, 24px);
+      height: clamp(18px, 1.6vw, 24px);
+      background: var(--sl-primary-900);
+      color: var(--sl-white);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(0.5em, 0.7vw, 0.65em);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .flow-step-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(0.7em, 1.1vw, 1em);
+      font-weight: 700;
+      color: var(--sl-primary-900);
+    }
+    .flow-step-mockup {
+      background: var(--sl-secondary-100);
+      border: 1px solid var(--sl-secondary-300);
+      border-radius: 8px;
+      padding: clamp(0.5em, 1vh, 0.9em) clamp(0.5em, 0.9vw, 0.9em);
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.3em, 0.6vh, 0.5em);
+    }
+    .product-flow .flow-arrow {
+      align-self: center;
+      flex-shrink: 0;
+    }
+
+    /* Search mockup (Step 1) */
+    .mock-search-sources {
+      display: flex;
+      gap: clamp(0.3em, 0.5vw, 0.5em);
+      flex-grow: 1;
+    }
+    .mock-source {
+      flex: 1;
+      background: var(--sl-white);
+      border: 1px solid var(--sl-secondary-300);
+      border-radius: 8px;
+      padding: clamp(0.4em, 0.7vh, 0.7em) clamp(0.4em, 0.6vw, 0.6em);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.2em, 0.4vh, 0.35em);
+    }
+    .mock-source-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.3em;
+    }
+    .mock-source-logo svg {
+      width: clamp(12px, 1.2vw, 18px);
+      height: auto;
+    }
+    .mock-source-logo span {
+      font-size: clamp(0.42em, 0.65vw, 0.58em);
+      font-weight: 600;
+      color: var(--sl-secondary-700);
+    }
+    .mock-search-bar {
+      background: var(--sl-secondary-100);
+      border: 1px solid var(--sl-secondary-300);
+      border-radius: 6px;
+      padding: clamp(0.2em, 0.35vh, 0.3em) clamp(0.3em, 0.5vw, 0.5em);
+      font-size: clamp(0.38em, 0.58vw, 0.5em);
+      color: var(--sl-secondary-700);
+      font-style: italic;
+    }
+    .mock-result {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.3em;
+    }
+    .mock-result-url {
+      font-size: clamp(0.36em, 0.55vw, 0.48em);
+      color: var(--sl-primary);
+      font-weight: 500;
+    }
+    .mock-result-rank {
+      font-size: clamp(0.34em, 0.5vw, 0.44em);
+      background: rgba(92,149,80,0.12);
+      color: var(--sl-success);
+      padding: 0.1em 0.4em;
+      border-radius: 4px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* Visitor list mockup (Step 2) */
+    .mock-agency-list {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.25em, 0.5vh, 0.4em);
+      flex-grow: 1;
+      justify-content: center;
+    }
+    .mock-agency-row {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.3em, 0.5vw, 0.5em);
+      border-radius: 8px;
+      padding: clamp(0.3em, 0.5vh, 0.5em) clamp(0.4em, 0.6vw, 0.6em);
+    }
+    .mock-agency-row--ghost {
+      background: var(--sl-secondary-200);
+    }
+    .mock-agency-row--identified {
+      background: var(--sl-white);
+      border: 1px solid var(--sl-secondary-300);
+    }
+    .mock-agency-avatar {
+      width: clamp(16px, 1.6vw, 24px);
+      height: clamp(16px, 1.6vw, 24px);
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .mock-agency-avatar--ghost {
+      background: var(--sl-secondary-300);
+      color: var(--sl-secondary-500);
+      font-size: clamp(0.34em, 0.55vw, 0.48em);
+    }
+    .mock-agency-avatar--identified {
+      background: var(--sl-primary);
+      color: var(--sl-white);
+      font-size: clamp(0.3em, 0.48vw, 0.42em);
+    }
+    .mock-agency-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .mock-agency-name {
+      font-size: clamp(0.38em, 0.6vw, 0.52em);
+      font-weight: 600;
+      color: var(--sl-secondary-700);
+    }
+    .mock-agency-meta {
+      font-size: clamp(0.32em, 0.48vw, 0.42em);
+      color: var(--sl-secondary-500);
+    }
+    .mock-ghost-bar {
+      height: clamp(4px, 0.5vh, 7px);
+      border-radius: 3px;
+      background: var(--sl-secondary-300);
+    }
+    .mock-ghost-bar--w1 { width: 70%; margin-bottom: clamp(2px, 0.25vh, 4px); }
+    .mock-ghost-bar--w2 { width: 45%; }
+    .mock-tag {
+      font-size: clamp(0.3em, 0.46vw, 0.4em);
+      padding: 0.15em 0.45em;
+      border-radius: 4px;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .mock-tag--ghost {
+      background: var(--sl-secondary-300);
+      color: var(--sl-secondary-500);
+    }
+    .mock-tag--matched {
+      background: rgba(92,149,80,0.12);
+      color: var(--sl-success);
+    }
+
+    /* Brief notification mockup (Step 3) */
+    .mock-brief {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.25em, 0.5vh, 0.4em);
+      flex-grow: 1;
+      justify-content: center;
+    }
+    .mock-brief-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3em;
+      font-size: clamp(0.34em, 0.5vw, 0.44em);
+      font-weight: 600;
+      color: var(--sl-success);
+      align-self: flex-start;
+    }
+    .mock-brief-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--sl-success);
+    }
+    .mock-brief-title {
+      font-size: clamp(0.4em, 0.65vw, 0.56em);
+      font-weight: 600;
+      color: var(--sl-secondary-700);
+      line-height: 1.4;
+    }
+    .mock-brief-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: clamp(0.34em, 0.52vw, 0.46em);
+    }
+    .mock-brief-label {
+      color: var(--sl-secondary-500);
+    }
+    .mock-brief-value {
+      color: var(--sl-secondary-700);
+      font-weight: 500;
+    }
+    .mock-brief-budget {
+      background: rgba(32,13,242,0.08);
+      color: var(--sl-primary);
+      padding: 0.1em 0.4em;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .mock-brief-cta {
+      background: var(--sl-primary);
+      color: var(--sl-white);
+      border: none;
+      border-radius: 6px;
+      padding: clamp(0.25em, 0.4vh, 0.35em) 0;
+      font-size: clamp(0.36em, 0.55vw, 0.48em);
+      font-weight: 600;
+      text-align: center;
+      margin-top: clamp(0.15em, 0.3vh, 0.25em);
+    }
+
+    /* Signal list (Step 3: briefs + visits) */
+    .mock-signal-list {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.3em, 0.6vh, 0.5em);
+      flex-grow: 1;
+      justify-content: center;
+    }
+    .mock-visit {
+      background: var(--sl-white);
+      border: 1px solid var(--sl-secondary-300);
+      border-radius: 8px;
+      padding: clamp(0.5em, 0.9vh, 0.8em) clamp(0.5em, 0.8vw, 0.8em);
+      display: flex;
+      align-items: center;
+      gap: clamp(0.4em, 0.6vw, 0.6em);
+    }
+    .mock-visit-icon {
+      flex-shrink: 0;
+      width: clamp(18px, 1.8vw, 26px);
+      height: clamp(18px, 1.8vw, 26px);
+      color: var(--sl-primary);
+    }
+    .mock-visit-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .mock-visit-title {
+      font-size: clamp(0.4em, 0.65vw, 0.56em);
+      font-weight: 600;
+      color: var(--sl-secondary-700);
+    }
+    .mock-visit-meta {
+      font-size: clamp(0.34em, 0.52vw, 0.46em);
+      color: var(--sl-secondary-500);
+    }
+    .mock-visit-icon--intent { color: var(--sl-danger); }
+    .mock-visit-icon--radar { color: var(--sl-primary); }
+    .mock-visit-icon--brief { color: var(--sl-success); }
+
+    /* Compact brief for fragment stack */
+    .mock-brief--compact {
+      background: var(--sl-white);
+      border: 1px solid var(--sl-secondary-300);
+      border-radius: 8px;
+      padding: clamp(0.35em, 0.6vh, 0.55em) clamp(0.4em, 0.6vw, 0.6em);
+    }
+    .mock-brief--compact .mock-brief-title {
+      font-size: clamp(0.36em, 0.56vw, 0.48em);
+    }
+    .mock-brief--compact .mock-brief-badge {
+      font-size: clamp(0.3em, 0.46vw, 0.4em);
+    }
+    .mock-brief--compact .mock-brief-row {
+      font-size: clamp(0.3em, 0.46vw, 0.4em);
+    }
+
+    /* ============================================================
+       PHARMACY CALLBACK (Slide 15)
+       ============================================================ */
+    .pharmacy-callback {
+      margin-top: clamp(0.3em, 0.5vh, 0.5em);
+      padding-top: clamp(0.3em, 0.5vh, 0.5em);
+      border-top: 1px solid var(--sl-secondary-300);
+    }
+    .pharmacy-callback .brief-quote {
+      margin: 0.3em 0;
+      padding: 0.3em 0.8em;
+      font-size: clamp(0.7em, 1vw, 0.9em);
+    }
+
+    /* ============================================================
+       SOURCE FOOTNOTE
+       ============================================================ */
+    .source-note {
+      font-size: clamp(0.45em, 0.7vw, 0.6em);
+      color: var(--sl-secondary-400);
+      text-align: right;
+      margin-top: clamp(0.4em, 0.8vh, 0.7em);
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       CTA SLIDE
+       ============================================================ */
+    .cta-logo { margin-bottom: 2em; }
+    .cta-subtitle {
+      color: var(--sl-secondary-300);
+      margin-bottom: 1em;
+    }
+    .cta-subtitle a {
+      color: var(--sl-secondary-300);
+      text-decoration: none;
+    }
+    .cta-links {
+      margin-top: 2em;
+      display: flex;
+      gap: 2em;
+      justify-content: center;
+      align-items: center;
+      font-size: clamp(0.6em, 0.9vw, 0.78em);
+    }
+    .cta-links a {
+      color: var(--sl-secondary-400);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .cta-links .cta-sep { color: var(--sl-secondary-500); }
+    .cta-trial { font-weight: 400; opacity: 0.7; }
+    .cta-trial a { color: var(--sl-secondary-400); text-decoration: none; }
+
+    /* ============================================================
+       MEME GRID (Client Expectations slide)
+       ============================================================ */
+    .meme-grid {
+      display: flex;
+      gap: clamp(1.5em, 3vw, 3em);
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
+    }
+    .meme-grid img {
+      max-height: 58vh;
+      width: auto;
+      border-radius: var(--radius-card);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+
+    /* ============================================================
+       SLIDE-SPECIFIC: opening brief
+       ============================================================ */
+    .opener-reveal {
+      font-size: 1.4em;
+      color: var(--sl-primary-900);
+    }
+
+    /* ============================================================
+       LOGO WATERMARK
+       ============================================================ */
+    .sl-logo {
+      position: fixed;
+      bottom: 24px;
+      right: 36px;
+      opacity: 0.12;
+      z-index: 10;
+    }
+
+    /* ============================================================
+       SLIDE NUMBER
+       ============================================================ */
+    .reveal .slide-number {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--sl-secondary-400);
+      background: transparent;
+      bottom: 24px;
+      left: 36px;
+      right: auto;
+    }
+
+    /* ============================================================
+       TITLE SLIDE
+       ============================================================ */
+    .title-slide-logo {
+      height: clamp(18px, 2.2vw, 28px);
+    }
+
+    .title-slide-heading {
+      color: var(--sl-white);
+    }
+
+    .title-slide-subtitle {
+      font-size: clamp(0.8em, 1.3vw, 1.1em);
+      font-style: italic;
+      color: var(--sl-secondary-500);
+      margin-top: 0.6em;
+      line-height: 1.5;
+    }
+
+    .title-slide-footer {
+      position: absolute;
+      bottom: var(--slide-pad-v);
+      left: var(--slide-pad-h);
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+    }
+
+    .title-slide-footer-right {
+      position: absolute;
+      bottom: var(--slide-pad-v);
+      right: var(--slide-pad-h);
+      font-size: clamp(0.65em, 1vw, 0.85em);
+      color: var(--sl-secondary-500);
+      letter-spacing: 0.02em;
+    }
+
+    /* ============================================================
+       PROGRESS BAR & CONTROLS
+       ============================================================ */
+    .reveal .progress { height: 3px; color: var(--sl-primary); }
+    .reveal .controls { color: var(--sl-primary); }
+  </style>
+</head>
+<body>
+
+<!-- Sortlist monogram watermark -->
+<div class="sl-logo">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 2000" height="32">
+    <path fill="#020219" d="M2000 1001.6c-.5 925.8-72.7 997.9-998.5 998.4h-3.1C72.6 1999.5.5 1927.3 0 1001.5v-3.1C.5 72.6 72.7.5 998.5 0h3.1c925.8.5 998 72.7 998.5 998.4-.1 1.1-.1 2.1-.1 3.2z"/>
+    <g fill="#FFF">
+      <path d="M544.1 1390l74.1-114.3c78.4 57.1 171.1 90 252.4 90 78.4 0 125.5-32.8 125.5-84.3 0-58.5-68.4-78.5-156.8-101.4-159.7-42.9-260.9-87.1-260.9-221.4 0-137.1 112.6-231.4 278-231.4 99.8 0 201 35.7 280.9 88.6l-67 117.1c-69.9-44.3-146.9-72.9-213.9-72.9-65.6 0-116.9 30-116.9 81.4 0 48.6 45.6 61.4 158.3 95.7 124 34.3 259.5 75.7 259.5 228.6 0 142.8-118.3 234.3-289.4 234.3-114.2 0-235.4-40-323.8-110z"/>
+      <path d="M1455.9 500h-171.2v1000h171.2V500z"/>
+    </g>
+  </svg>
+</div>
+
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================================================ -->
+<!-- SLIDE 0: TITLE -->
+<!-- ============================================================ -->
+<section class="center-slide" data-background-color="#020219">
+  <div class="content-wide">
+    <h1 class="title-slide-heading">The Data Doesn't Lie</h1>
+    <p class="title-slide-subtitle">What you read online vs. what 24,000 buyers actually did</p>
+  </div>
+  <div class="title-slide-footer">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.5 72.3" class="title-slide-logo"><path fill="#FFFFFF" d="M280.1 60.4c-1.1 1.1-3 1.8-5 1.8-2.7 0-4.9-2.4-4.9-5.8V30.8h11.3V21h-11.3V7.3h-11.4v50.6c0 8.4 5.8 14.4 14.1 14.4 3.9 0 8-1.6 10.8-4l-3.6-7.9z"/><path fill="#FFFFFF" d="M24 40.9c-7.7-2.3-10.8-3.2-10.8-6.5 0-3.5 3.5-5.5 8-5.5 4.6 0 9.8 1.9 14.5 4.9l4.6-8c-5.4-3.6-12.3-6-19.1-6-11.2.1-18.9 6.5-18.9 15.8 0 9.1 6.9 12.1 17.7 15 6 1.6 10.7 2.9 10.7 6.9 0 3.5-3.2 5.7-8.5 5.7-5.5 0-11.8-2.2-17.2-6.1l-5 7.8c6 4.8 14.3 7.5 22 7.5 11.6 0 19.7-6.2 19.7-15.9 0-10.4-9.2-13.2-17.7-15.6z"/><path fill="#FFFFFF" d="M200.1 13.5c3.7 0 6.6-3.2 6.6-6.8 0-3.6-2.9-6.7-6.6-6.7-3.8 0-6.8 3.1-6.8 6.7s3 6.8 6.8 6.8z"/><path fill="#FFFFFF" d="M206 21h-11.8v50.1H206V21z"/><path fill="#FFFFFF" d="M183.8 3.4H172v67.8h11.8V3.4z"/><path fill="#FFFFFF" d="M158.9 62.3c-2.7 0-4.9-2.4-4.9-5.8V30.8h11.3V21H154V7.3h-6.5c0 3.5-1.1 6.7-2.9 9.1-2 2.7-5 4.5-8.3 4.5h-1.6l-1.8 10h9.6V58c0 8.4 5.8 14.4 14.1 14.4 3.9 0 8-1.6 10.8-4l-3.4-8c-1.2 1.1-3.1 1.9-5.1 1.9z"/><path fill="#FFFFFF" d="M114.4 31.6V21h-11.8v50.1h11.8V46.9c0-9.5 5.5-16 15.1-16l1.9-9.9c-10.8-.1-13.8 4.1-17 10.6z"/><path fill="#FFFFFF" d="M70.8 19.9c-14.8 0-27 11.7-27 26.2s12.1 26.3 27 26.3c14.7 0 26.8-11.8 26.8-26.3S85.5 19.9 70.8 19.9zm0 42.4c-8.4 0-15.3-7.3-15.3-16.2 0-8.9 6.9-16.1 15.3-16.1 8.3 0 15.1 7.2 15.1 16.1 0 8.9-6.8 16.2-15.1 16.2z"/><path fill="#FFFFFF" d="M236.2 40.9c-7.7-2.3-10.8-3.2-10.8-6.5 0-3.5 3.5-5.5 8-5.5 4.6 0 9.8 1.9 14.5 4.9l4.6-8c-5.4-3.6-12.3-6-19.1-6-11.2 0-18.9 6.4-18.9 15.7 0 9.1 6.9 12.1 17.7 15 6 1.6 10.7 2.9 10.7 6.9 0 3.5-3.2 5.7-8.5 5.7-5.5 0-11.8-2.2-17.2-6.1l-5 7.8c6 4.8 14.3 7.5 22 7.5 11.6 0 19.7-6.2 19.7-15.9 0-10.3-9.2-13.1-17.7-15.5z"/></svg>
+  </div>
+  <div class="title-slide-footer-right">10/03/2026 &middot; Antwerp, Belgium</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 1: THE PHARMACY (OPENING) -->
+<!-- ============================================================ -->
+<section class="center-slide">
+  <div class="content-wide">
+    <p class="muted text-sm mb-2">A real brief. Received 2025.</p>
+    <div class="brief-quote">
+      "We want to optimize our processes through automation and AI. We're looking for a partner who can analyze our workflows and propose concrete solutions."
+    </div>
+    <p class="opener-reveal mt-2">
+      A <strong>pharmacy</strong>. In Belgium.
+    </p>
+    <p class="muted text-sm mt-1">Budget: &euro;20,000</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 1b: CLIENT EXPECTATIONS (meme ice-breaker) -->
+<!-- ============================================================ -->
+<section class="center-slide">
+  <h2>Let's talk Client Expectations</h2>
+  <div class="meme-grid">
+    <img src="meme-new-1.png" alt="Client expectation: yacht. Client budget: iron.">
+    <img src="meme-new-2.png" alt="Client expectations: Infinity Gauntlet. Client budget: rubber glove.">
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 2: WHO I AM -->
+<!-- ============================================================ -->
+<section class="vcenter-slide">
+  <div class="speaker-layout">
+    <div class="speaker-text">
+      <p class="section-label">Who am I</p>
+      <h2>Nicolas Finet</h2>
+      <p class="text-lg emphasis mb-1">CEO &amp; Co-founder, Sortlist</p>
+      <p class="body-text muted">
+        Sortlist is the marketplace where companies find agencies. 80,000 agencies, 90+ countries.<br>
+        We also built Overloop (outbound for agencies) and Radar (website visitor identification).<br>
+        That means we see both sides: what buyers want, and how agencies win them.
+      </p>
+    </div>
+    <img src="nicolas-finet.jpeg" alt="Nicolas Finet" class="speaker-photo">
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 3: THE DATA -->
+<!-- ============================================================ -->
+<section>
+  <p class="section-label">The data</p>
+  <h2>Why we have this data</h2>
+
+  <div class="credibility-layout">
+    <div class="credibility-left">
+      <p class="body-text">Sortlist connects companies with agencies across 90+ countries. Overloop helps agencies run outbound. Together, we see both sides of the market.</p>
+
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-value">80k+</div>
+          <div class="stat-label">Agencies in our network</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">24k+</div>
+          <div class="stat-label">Briefs analysed, 2024-2025</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">&euro;400M+</div>
+          <div class="stat-label">In stated project budgets, 2024-2025</div>
+        </div>
+      </div>
+
+      <div class="bias-box">
+        <strong class="danger">Bias disclaimer.</strong> This is Sortlist data, not the full market.
+        Our audience skews European, mid-market, and digitally active.
+        I'll show you proportional shifts, not absolute market size.
+      </div>
+    </div>
+
+    <div class="logo-panel">
+      <div class="logo-panel-title">Who posts briefs</div>
+      <div class="profile-row">
+        <span class="profile-row-label">Top geography</span>
+        <span class="profile-row-value">Europe (85%)</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-row-label">Median company size</span>
+        <span class="profile-row-value">10-50 emp.</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-row-label">Top sectors</span>
+        <span class="profile-row-value">Industrial, Retail, Software</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-row-label">Persona</span>
+        <span class="profile-row-value">Business owners</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-row-label">Avg. project budget</span>
+        <span class="profile-row-value">&euro;20k</span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-row-label">Typical ask</span>
+        <span class="profile-row-value">Marketing, AI, Software</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- SLIDE 3b: HOW IT WORKS -->
+<!-- ============================================================ -->
+<section class="vcenter-slide">
+  <p class="section-label">How it works</p>
+  <h2>Where our data comes from</h2>
+
+  <div class="product-flow">
+    <!-- Step 1: Buyers search -->
+    <div class="flow-step">
+      <div class="flow-step-header">
+        <div class="flow-step-num">1</div>
+        <div class="flow-step-title">A buyer searches</div>
+      </div>
+      <div class="flow-step-mockup">
+        <div class="mock-search-sources">
+          <!-- Google source -->
+          <div class="mock-source">
+            <div class="mock-source-logo">
+              <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="var(--sl-secondary-700)" d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg>
+              <span>Google</span>
+            </div>
+            <div class="mock-search-bar">seo agency Belgium</div>
+            <div class="mock-result">
+              <span class="mock-result-url">sortlist.com/.../seo</span>
+              <span class="mock-result-rank">#1</span>
+            </div>
+          </div>
+          <!-- ChatGPT source -->
+          <div class="mock-source">
+            <div class="mock-source-logo">
+              <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="var(--sl-secondary-700)" d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.998 5.998 0 0 0-3.992 2.9 6.042 6.042 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
+              <span>ChatGPT</span>
+            </div>
+            <div class="mock-search-bar">best seo agency for e-commerce</div>
+            <div class="mock-result">
+              <span class="mock-result-url">Recommends sortlist.com</span>
+              <span class="mock-result-rank">&#10003;</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow (appears with step 2) -->
+    <svg class="flow-arrow fragment" data-fragment-index="1" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14m0 0l-4-4m4 4l-4 4" stroke="var(--sl-secondary-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+    <!-- Step 2: We identify (fragment 1) -->
+    <div class="flow-step fragment" data-fragment-index="1">
+      <div class="flow-step-header">
+        <div class="flow-step-num">2</div>
+        <div class="flow-step-title">We find out who they are</div>
+      </div>
+      <div class="flow-step-mockup">
+        <div class="mock-agency-list">
+          <div class="mock-agency-row mock-agency-row--ghost">
+            <div class="mock-agency-avatar mock-agency-avatar--ghost">?</div>
+            <div class="mock-agency-info">
+              <div class="mock-ghost-bar mock-ghost-bar--w1"></div>
+              <div class="mock-ghost-bar mock-ghost-bar--w2"></div>
+            </div>
+            <div class="mock-tag mock-tag--ghost">Anonymous</div>
+          </div>
+          <div class="mock-agency-row mock-agency-row--identified">
+            <div class="mock-agency-avatar mock-agency-avatar--identified">DE</div>
+            <div class="mock-agency-info">
+              <div class="mock-agency-name">Decathlon</div>
+              <div class="mock-agency-meta">Retail &middot; Belgium &middot; 5 pages</div>
+            </div>
+            <div class="mock-tag mock-tag--matched">Identified &#10003;</div>
+          </div>
+          <div class="mock-agency-row mock-agency-row--ghost">
+            <div class="mock-agency-avatar mock-agency-avatar--ghost">?</div>
+            <div class="mock-agency-info">
+              <div class="mock-ghost-bar mock-ghost-bar--w1"></div>
+              <div class="mock-ghost-bar mock-ghost-bar--w2"></div>
+            </div>
+            <div class="mock-tag mock-tag--ghost">Anonymous</div>
+          </div>
+          <div class="mock-agency-row mock-agency-row--ghost">
+            <div class="mock-agency-avatar mock-agency-avatar--ghost">?</div>
+            <div class="mock-agency-info">
+              <div class="mock-ghost-bar mock-ghost-bar--w1"></div>
+              <div class="mock-ghost-bar mock-ghost-bar--w2"></div>
+            </div>
+            <div class="mock-tag mock-tag--ghost">Anonymous</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow (appears with step 3) -->
+    <svg class="flow-arrow fragment" data-fragment-index="2" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14m0 0l-4-4m4 4l-4 4" stroke="var(--sl-secondary-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+    <!-- Step 3: We do the match (fragment 2+) -->
+    <div class="flow-step fragment" data-fragment-index="2">
+      <div class="flow-step-header">
+        <div class="flow-step-num">3</div>
+        <div class="flow-step-title">We do the match</div>
+      </div>
+      <div class="flow-step-mockup">
+        <div class="mock-signal-list">
+          <!-- Signal 1: Intent detected (appears with step 3) -->
+          <div class="mock-visit fragment" data-fragment-index="2">
+            <svg class="mock-visit-icon mock-visit-icon--intent" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="mock-visit-content">
+              <div class="mock-visit-title">Intent detected: SEO agencies</div>
+              <div class="mock-visit-meta">Decathlon &middot; sourced via IP</div>
+            </div>
+          </div>
+          <!-- Signal 2: Profile visit (same click as step 3) -->
+          <div class="mock-visit fragment" data-fragment-index="2">
+            <svg class="mock-visit-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/></svg>
+            <div class="mock-visit-content">
+              <div class="mock-visit-title">Decathlon visited your profile</div>
+              <div class="mock-visit-meta">5 pages &middot; 3 min ago</div>
+            </div>
+          </div>
+          <!-- Signal 3: Visibility push (fragment 3) -->
+          <div class="mock-visit fragment" data-fragment-index="3">
+            <svg class="mock-visit-icon mock-visit-icon--radar" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="6" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
+            <div class="mock-visit-content">
+              <div class="mock-visit-title">Decathlon pushed to your website</div>
+              <div class="mock-visit-meta">Radar visibility module</div>
+            </div>
+          </div>
+          <!-- Signal 4: Briefing posted (fragment 3, same click) -->
+          <div class="mock-brief mock-brief--compact fragment" data-fragment-index="3">
+            <div class="mock-brief-badge">
+              <span class="mock-brief-dot"></span>
+              Briefing posted
+            </div>
+            <div class="mock-brief-title">Decathlon is looking for an SEO agency</div>
+            <div class="mock-brief-row">
+              <span class="mock-brief-label">Budget</span>
+              <span class="mock-brief-budget">&euro;10k &ndash; &euro;25k</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="source-note">Every brief you'll see today came through this pipeline. All anonymised.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 5: THE FLOOR IS RISING -->
+<!-- ============================================================ -->
+<section>
+  <p class="section-label">The floor is rising</p>
+  <h2>Share of briefs &ge;&euro;10k, by category</h2>
+
+  <div class="floor-grid">
+    <!-- Row 1: Rising (click 1) -->
+    <div class="floor-card floor-card--up fragment" data-fragment-index="1">
+      <div class="floor-card-name">Artificial Intelligence</div>
+      <div class="floor-card-why">New category, new budgets. The buyers aren't techies. We'll see who they are.</div>
+      <div class="floor-card-data">30% &rarr; 38% &middot; <span class="success">&uarr; 8 pts</span></div>
+    </div>
+    <div class="floor-card floor-card--up fragment" data-fragment-index="1">
+      <div class="floor-card-name">Growth Marketing</div>
+      <div class="floor-card-why">Low-budget campaigns disappear from platforms. What remains requires more strategy.</div>
+      <div class="floor-card-data">11% &rarr; 14% &middot; <span class="success">&uarr; 3 pts</span></div>
+    </div>
+    <div class="floor-card floor-card--up fragment" data-fragment-index="1">
+      <div class="floor-card-name">Marketing</div>
+      <div class="floor-card-why">"Digital marketing" is just "marketing" now. This label absorbs everything.</div>
+      <div class="floor-card-data">14% &rarr; 15% &middot; <span class="success">&uarr; 1 pt</span></div>
+    </div>
+    <!-- Row 2: Stable + Declining (click 2 + click 3) -->
+    <div class="floor-card floor-card--flat fragment" data-fragment-index="2">
+      <div class="floor-card-name">Software Dev</div>
+      <div class="floor-card-why">Already high. You can't build a custom app with a template. Not yet.</div>
+      <div class="floor-card-data">36% &rarr; 36% &middot; <span class="muted">&asymp;</span></div>
+    </div>
+    <div class="floor-card floor-card--down fragment" data-fragment-index="3">
+      <div class="floor-card-name">SEO</div>
+      <div class="floor-card-why">Content production moves to tools. What's left on platforms is strategy-level work.</div>
+      <div class="floor-card-data">6% &rarr; 5% &middot; <span class="danger">&darr; 2 pts</span></div>
+    </div>
+    <div class="floor-card floor-card--down fragment" data-fragment-index="3">
+      <div class="floor-card-name">Branding</div>
+      <div class="floor-card-why">Execution work moves to tools. Brand strategy and consulting budgets hold.</div>
+      <div class="floor-card-data">18% &rarr; 12% &middot; <span class="danger">&darr; 6 pts</span></div>
+    </div>
+  </div>
+
+  <p class="source-note">Source: Sortlist project data, 2024 vs 2025. Share of briefs with budget &ge;&euro;10k.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 6: THE HYPOTHESIS -->
+<!-- ============================================================ -->
+<section class="vcenter-slide">
+  <p class="section-label">The hypothesis</p>
+  <h2>Where did the small projects go?</h2>
+
+  <div class="hypothesis-box">
+    <div class="hypothesis-label">Hypothesis, not a fact</div>
+    <p class="body-text mb-0">
+      The simplest projects (a basic logo, a 5-page site, a simple ad campaign) are
+      increasingly absorbed by tools: <strong class="emphasis">Canva, ChatGPT, Wix, Midjourney</strong>.
+    </p>
+  </div>
+
+  <p class="body-text mt-2">
+    We can't prove this from our data alone. But when the share of larger budgets rises
+    while volume drops, the floor rising is the simplest explanation.
+  </p>
+  <p class="muted text-sm mt-1">
+    The projects that remain on Sortlist are the ones that <em>can't</em> be solved by a tool.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 7: THE RESHUFFLE -->
+<!-- ============================================================ -->
+<section>
+  <p class="section-label">The reshuffle</p>
+  <h2>Which services are clients asking for?</h2>
+
+  <div class="reshuffle-section">
+    <!-- RISING (click 1) -->
+    <div class="reshuffle-group fragment" data-fragment-index="1">
+      <div class="reshuffle-header success">Rising</div>
+      <div class="reshuffle-row reshuffle-row--4">
+        <div class="floor-card floor-card--up">
+          <div class="floor-card-name">Marketing</div>
+          <div class="floor-card-why">The catch-all label. "Digital marketing" finally just became "marketing."</div>
+          <div class="floor-card-data"><span class="success">Gaining share &uarr;</span></div>
+        </div>
+        <div class="floor-card floor-card--up">
+          <div class="floor-card-name">Branding</div>
+          <div class="floor-card-why">Companies investing in differentiation before they spend on ads.</div>
+          <div class="floor-card-data"><span class="success">Gaining share &uarr;</span></div>
+        </div>
+        <div class="floor-card floor-card--accent">
+          <div class="floor-card-name">AI</div>
+          <div class="floor-card-why">New category. Didn't exist 2 years ago. We'll deep-dive this one.</div>
+          <div class="floor-card-data">Share <span class="accent font-bold">&times;2.4</span></div>
+        </div>
+        <div class="floor-card floor-card--accent">
+          <div class="floor-card-name">Software Dev</div>
+          <div class="floor-card-why">Custom software can't be replaced by a template. Yet.</div>
+          <div class="floor-card-data">Share <span class="accent font-bold">&times;1.9</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STABLE (click 2) -->
+    <div class="reshuffle-group fragment" data-fragment-index="2">
+      <div class="reshuffle-header muted">Stable</div>
+      <div class="reshuffle-row reshuffle-row--4">
+        <div class="floor-card floor-card--flat">
+          <div class="floor-card-name">Social Media</div>
+          <div class="floor-card-why">#2 category by volume. Not going anywhere.</div>
+          <div class="floor-card-data"><span class="muted">Holding steady =</span></div>
+        </div>
+        <div class="floor-card floor-card--flat">
+          <div class="floor-card-name">Influencer</div>
+          <div class="floor-card-why">Holding steady. The channel is mature.</div>
+          <div class="floor-card-data"><span class="muted">Holding steady =</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DECLINING (click 3) -->
+    <div class="reshuffle-group fragment" data-fragment-index="3">
+      <div class="reshuffle-header danger">Declining</div>
+      <div class="reshuffle-row reshuffle-row--3">
+        <div class="floor-card floor-card--down">
+          <div class="floor-card-name">Digital Strategy</div>
+          <div class="floor-card-why">The label is dying. The work moved into "Marketing." Same job, new name.</div>
+          <div class="floor-card-data"><span class="danger">Losing share &darr;</span></div>
+        </div>
+        <div class="floor-card floor-card--down">
+          <div class="floor-card-name">Graphic Design</div>
+          <div class="floor-card-why">Canva + Midjourney eating the simple stuff. Complex work moves to "Branding."</div>
+          <div class="floor-card-data"><span class="danger">Losing share &darr;</span></div>
+        </div>
+        <div class="floor-card floor-card--down">
+          <div class="floor-card-name">PR &amp; Event</div>
+          <div class="floor-card-why">Declining as a standalone brief. Often bundled into broader marketing mandates.</div>
+          <div class="floor-card-data"><span class="danger">Losing share &darr;</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 4: THE THESIS (moved after data evidence) -->
+<!-- ============================================================ -->
+<section class="dark-slide center-slide" data-background-color="#020219">
+  <div class="thesis-banner content-wide">
+    <p class="muted text-sm mb-1">The central thesis</p>
+    <h1 class="thesis-title">
+      The bottom of the market<br>is being automated.
+    </h1>
+    <h1 class="thesis-highlight">
+      The top is booming.
+    </h1>
+    <p class="muted mt-2 text-sm">Which side are you on?</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 8: DON'T PANIC -->
+<!-- ============================================================ -->
+<section class="center-slide">
+  <h2>Don't panic.</h2>
+  <p class="body-text content-medium">
+    Your service isn't dying. The <em>label</em> is changing.
+  </p>
+
+  <div class="brief-quote content-medium mt-2">
+    "We need someone to build our online marketing strategy, manage our campaigns, and track ROI."
+  </div>
+
+  <p class="body-text content-medium mt-1">
+    Two years ago, that brief was filed under <span class="danger font-semibold">"Digital Strategy"</span>.<br>
+    Today, the exact same brief is filed under <span class="success font-semibold">"Marketing"</span>.
+  </p>
+  <p class="body-text content-medium mb-0">
+    Same client. Same deliverable. Same agency. <strong class="emphasis">Different checkbox.</strong>
+  </p>
+
+  <p class="muted text-sm mt-2 content-medium">
+    If your category is "declining," check whether the work just moved to another label.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 9: AI DEEP DIVE (merged overview + buyers) -->
+<!-- ============================================================ -->
+<section>
+  <p class="section-label">Deep dive: AI</p>
+  <h2>Who's buying AI services?</h2>
+
+  <div class="stat-grid">
+    <div class="stat-box">
+      <div class="stat-value stat-value--accent">2.4x</div>
+      <div class="stat-label">Share of briefs, year over year</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value stat-value--accent">67%</div>
+      <div class="stat-label">are companies with 2-50 employees</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value stat-value--success">38%</div>
+      <div class="stat-label">budgets &ge;&euro;10k</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="col-header">Company size (2025)</div>
+      <table class="data-table">
+        <tbody>
+          <tr><td>Solo / Micro (1-2)</td><td class="num">11%</td></tr>
+          <tr class="highlight-row"><td>Small (2-10)</td><td class="num font-semibold emphasis">36%</td></tr>
+          <tr class="highlight-row"><td>Mid-small (11-50)</td><td class="num font-semibold emphasis">31%</td></tr>
+          <tr><td>Mid (51-200)</td><td class="num">6%</td></tr>
+          <tr><td>Large (200+)</td><td class="num">16%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="col-header">Top sectors</div>
+      <table class="data-table">
+        <tbody>
+          <tr><td>Industrial Goods &amp; Services</td><td class="num">9%</td></tr>
+          <tr><td>Education</td><td class="num">7%</td></tr>
+          <tr><td>Construction</td><td class="num">6%</td></tr>
+          <tr><td>Software &amp; IT</td><td class="num">6%</td></tr>
+          <tr><td>Banking &amp; Finance</td><td class="num">6%</td></tr>
+          <tr><td>Healthcare</td><td class="num">6%</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm muted mt-1">Highly fragmented. Traditional sectors lead.</p>
+    </div>
+  </div>
+
+  <p class="body-text muted mb-0">Not startups. Not tech companies. The factory down the road.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 10b: AI BRIEFS -->
+<!-- ============================================================ -->
+<section>
+  <p class="section-label">AI briefs</p>
+  <h2>Real briefs. Real companies. Real budgets.</h2>
+
+  <div class="brief-stack">
+    <div class="brief-row fragment" data-fragment-index="1">
+      <div class="brief-row-quote">"We manufacture farm equipment. We want AI to predict maintenance schedules and automate order processing."</div>
+      <div class="brief-row-tags"><strong>Belgium</strong> <span>&euro;50k</span> <span>Industrial</span> <span>85 emp.</span></div>
+    </div>
+    <div class="brief-row fragment" data-fragment-index="2">
+      <div class="brief-row-quote">"We sell and service boats. We need an AI chatbot for technical questions about models, availability, and maintenance."</div>
+      <div class="brief-row-tags"><strong>France</strong> <span>&euro;10k</span> <span>Retail</span> <span>15 emp.</span></div>
+    </div>
+    <div class="brief-row fragment" data-fragment-index="3">
+      <div class="brief-row-quote">"We are a metal processing factory. We want AI to optimize production planning and automate quality control with computer vision."</div>
+      <div class="brief-row-tags"><strong>Spain</strong> <span>&euro;100k</span> <span>Industrial</span> <span>85 emp.</span></div>
+    </div>
+    <div class="brief-row fragment" data-fragment-index="4">
+      <div class="brief-row-quote">"We run a genetics laboratory. We need AI to help researchers analyze test results faster and flag anomalies."</div>
+      <div class="brief-row-tags"><strong>Germany</strong> <span>&euro;20k</span> <span>Healthcare</span> <span>35 emp.</span></div>
+    </div>
+    <div class="brief-row fragment" data-fragment-index="5">
+      <div class="brief-row-quote">"We are a mental health NGO. We want an AI-powered triage tool to match people with the right therapist."</div>
+      <div class="brief-row-tags"><strong>Lebanon</strong> <span>&euro;70k</span> <span>Non-profit</span> <span>25 emp.</span></div>
+    </div>
+  </div>
+
+  <p class="muted text-sm fragment mt-2" data-fragment-index="6">
+    Farm equipment. Boats. Metal. Genetics. Mental health.<br>This is not Silicon Valley buying AI. This is <em>everyone</em>.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 11: AI SKILLS PATH -->
+<!-- ============================================================ -->
+<section class="vcenter-slide">
+  <p class="section-label">AI services</p>
+  <h2>What they're actually asking for</h2>
+
+  <div class="flow-layout">
+    <div class="stat-box">
+      <div class="stat-value">Strategy</div>
+      <div class="stat-label">"Analyze our workflows"</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="stat-box">
+      <div class="stat-value">Chatbot</div>
+      <div class="stat-label">"Build us a bot"</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="stat-box">
+      <div class="stat-value">Automation</div>
+      <div class="stat-label">"Automate this process"</div>
+    </div>
+  </div>
+
+  <p class="body-text content-medium mt-2 text-center">
+    The pattern: start with strategy consulting, move to a visible deliverable (chatbot),
+    then expand to back-office automation.
+  </p>
+  <p class="muted text-sm mt-1 text-center">
+    Each step increases project scope. And budget.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 12: SOFTWARE DEV (merged stats + briefs) -->
+<!-- ============================================================ -->
+<section>
+  <p class="section-label">Deep dive: Software Development</p>
+  <h2>Software Development</h2>
+
+  <div class="stat-grid stat-grid--2col">
+    <div class="stat-box">
+      <div class="stat-value stat-value--accent">1.9x</div>
+      <div class="stat-label">Share of briefs, year over year</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value stat-value--success">35.7%</div>
+      <div class="stat-label">Budgets &ge;&euro;10k</div>
+    </div>
+  </div>
+
+  <div class="brief-stack">
+    <div class="brief-row fragment" data-fragment-index="1">
+      <div class="brief-row-quote">"We need a mobile app for our field security agents to log incidents, take photos, and sync reports with our back office in real time."</div>
+      <div class="brief-row-tags"><strong>Belgium</strong> <span>&euro;10k</span> <span>Security</span> <span>120 emp.</span></div>
+    </div>
+    <div class="brief-row fragment" data-fragment-index="2">
+      <div class="brief-row-quote">"We run a staffing agency and need a custom SaaS platform to manage candidate pipelines, client contracts, and automated matching."</div>
+      <div class="brief-row-tags"><strong>France</strong> <span>&euro;50k</span> <span>HR / Staffing</span> <span>30 emp.</span></div>
+    </div>
+  </div>
+
+  <p class="muted text-sm mt-1">
+    Custom software can't be replaced by off-the-shelf tools. Yet.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 13: GROWTH + SEO -->
+<!-- ============================================================ -->
+<section class="vcenter-slide">
+  <p class="section-label">Deep dive: Growth &amp; SEO</p>
+  <h2>Growth Marketing &amp; SEO</h2>
+
+  <div class="two-col">
+    <div>
+      <div class="col-header">Growth Marketing</div>
+      <div class="stat-box stat-box--spaced">
+        <div class="stat-value stat-value--success">+3 pts</div>
+        <div class="stat-label">Briefs &ge;&euro;10k</div>
+      </div>
+      <p class="body-text-sm">11% &rarr; 14% of briefs now exceed &euro;10k. The cheap campaigns are gone. What's left is real budget.</p>
+    </div>
+    <div>
+      <div class="col-header">SEO</div>
+      <div class="stat-box stat-box--spaced">
+        <div class="stat-value stat-value--danger">&minus;2 pts</div>
+        <div class="stat-label">Briefs &ge;&euro;10k</div>
+      </div>
+      <p class="body-text-sm">6% &rarr; 4% of briefs exceed &euro;10k. Content production moves to tools. Budgets shrink but orient toward strategy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 13a: Growth & SEO BRIEFS -->
+<!-- ============================================================ -->
+<section>
+  <p class="section-label">Growth &amp; SEO briefs</p>
+  <h2>The work is real. And it's evolving.</h2>
+
+  <div class="brief-stack">
+    <div class="brief-row fragment" data-fragment-index="1">
+      <div class="brief-row-quote">"We sell automotive parts B2B. We need a growth agency to build a full acquisition funnel: paid ads, landing pages, lead nurturing, and conversion tracking."</div>
+      <div class="brief-row-tags"><strong>Belgium</strong> <span>&euro;10k</span> <span>Automotive</span> <span>8 emp.</span></div>
+    </div>
+    <div class="brief-row fragment" data-fragment-index="2">
+      <div class="brief-row-quote">"We're a shipping and aircraft services company. We need a lead generation agency to reach logistics directors across the Middle East."</div>
+      <div class="brief-row-tags"><strong>UAE</strong> <span>&euro;50k</span> <span>Logistics</span> <span>200+ emp.</span></div>
+    </div>
+    <div class="brief-row brief-row--signal fragment" data-fragment-index="3">
+      <div class="brief-row-quote">"We want to improve our SEO, but we also want to make sure that <strong>ChatGPT and AI assistants mention our brand</strong> when people ask about our industry."</div>
+      <div class="brief-row-tags"><strong class="success">New signal</strong></div>
+    </div>
+  </div>
+
+  <p class="muted text-sm fragment mt-2" data-fragment-index="4">
+    SEO is evolving beyond Google. Clients now want visibility in <strong class="emphasis">AI-generated answers</strong>.
+    If you do SEO, this is your next conversation with every client.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 14: THE FULL PICTURE -->
+<!-- ============================================================ -->
+<section class="dark-slide center-slide" data-background-color="#020219">
+  <p class="section-label">Full picture</p>
+  <h2>Bringing it together</h2>
+
+  <div class="content-medium content-left">
+    <div class="takeaway-grid">
+      <span class="fragment takeaway-num" data-fragment-index="1">1.</span>
+      <span class="fragment" data-fragment-index="1">Small commodity projects are disappearing from our platform</span>
+      <span class="fragment takeaway-num" data-fragment-index="2">2.</span>
+      <span class="fragment" data-fragment-index="2">What remains is <strong class="emphasis">bigger, more complex, and more valuable</strong></span>
+      <span class="fragment takeaway-num" data-fragment-index="3">3.</span>
+      <span class="fragment" data-fragment-index="3">AI and Software Dev are the only categories gaining share</span>
+      <span class="fragment takeaway-num" data-fragment-index="4">4.</span>
+      <span class="fragment" data-fragment-index="4">Traditional services aren't dying. They're being <em>relabeled</em></span>
+      <span class="fragment takeaway-num" data-fragment-index="5">5.</span>
+      <span class="fragment" data-fragment-index="5">The buyers are <strong class="emphasis">traditional companies</strong>, not startups</span>
+    </div>
+  </div>
+
+  <div class="fragment thesis-banner content-narrow mt-2" data-fragment-index="6">
+    <p class="thesis-recap">
+      The bottom is being automated.<br>
+      <strong>The top is booming.</strong>
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 15: THREE ACTIONS (merged, with fragments) -->
+<!-- ============================================================ -->
+<section>
+  <p class="section-label">Three things to do Monday</p>
+  <h2>What you can act on right now</h2>
+
+  <div class="action-card fragment" data-fragment-index="1">
+    <p class="body-text mb-0"><strong class="emphasis">1. Audit your positioning against buyer language.</strong></p>
+    <p class="body-text-sm mb-0 mt-1">
+      If your language doesn't match how buyers describe their needs, they won't find you.
+    </p>
+  </div>
+
+  <div class="action-card fragment" data-fragment-index="2">
+    <p class="body-text mb-0"><strong class="emphasis">2. Pick a vertical.</strong></p>
+    <p class="body-text-sm mb-0 mt-1">
+      67% of AI buyers have 2-50 employees. Industrial, education, construction. The factory down the road.
+    </p>
+  </div>
+
+  <div class="action-card fragment" data-fragment-index="3">
+    <p class="body-text mb-0"><strong class="emphasis">3. Start the AI conversation with your clients.</strong></p>
+    <p class="body-text-sm mb-0 mt-1">
+      Strategy + chatbot + automation: that's 80% of what buyers ask for. Start with workflows.
+    </p>
+  </div>
+
+  <div class="pharmacy-callback fragment" data-fragment-index="4">
+    <div class="brief-quote">
+      "We want to optimize our processes through automation and AI."
+    </div>
+    <p class="body-text mb-0">
+      The pharmacy. Belgium. &euro;20k budget.
+      <strong class="emphasis">Are you the agency they find?</strong>
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 16: CTA -->
+<!-- ============================================================ -->
+<section class="dark-slide center-slide" data-background-color="#020219">
+  <div class="cta-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 2000" height="72">
+      <path fill="#200DF2" d="M2000 1001.6c-.5 925.8-72.7 997.9-998.5 998.4h-3.1C72.6 1999.5.5 1927.3 0 1001.5v-3.1C.5 72.6 72.7.5 998.5 0h3.1c925.8.5 998 72.7 998.5 998.4-.1 1.1-.1 2.1-.1 3.2z"/>
+      <g fill="#FFF">
+        <path d="M544.1 1390l74.1-114.3c78.4 57.1 171.1 90 252.4 90 78.4 0 125.5-32.8 125.5-84.3 0-58.5-68.4-78.5-156.8-101.4-159.7-42.9-260.9-87.1-260.9-221.4 0-137.1 112.6-231.4 278-231.4 99.8 0 201 35.7 280.9 88.6l-67 117.1c-69.9-44.3-146.9-72.9-213.9-72.9-65.6 0-116.9 30-116.9 81.4 0 48.6 45.6 61.4 158.3 95.7 124 34.3 259.5 75.7 259.5 228.6 0 142.8-118.3 234.3-289.4 234.3-114.2 0-235.4-40-323.8-110z"/>
+        <path d="M1455.9 500h-171.2v1000h171.2V500z"/>
+      </g>
+    </svg>
+  </div>
+
+  <h2>Questions?</h2>
+  <p class="body-text cta-subtitle">
+    Nicolas Finet &middot; <a href="https://www.linkedin.com/in/nicolasfinet/">linkedin.com/in/nicolasfinet</a>
+  </p>
+  <p class="muted text-sm content-narrow">
+    Happy to dig into the numbers for your specific vertical or service line.
+    Come say hi after the talk.
+  </p>
+
+  <div class="cta-links">
+    <a href="https://www.sortlist.com">sortlist.com</a>
+    <span class="cta-sep">&middot;</span>
+    <a href="https://www.overloop.com">overloop.com</a>
+  </div>
+  <p class="muted text-sm cta-trial mt-1">Agencies in the room: <a href="https://www.overloop.com">overloop.com</a> &mdash; 14 days free</p>
+</section>
+
+</div><!-- /.slides -->
+</div><!-- /.reveal -->
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: true,
+    transition: 'fade',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    center: false,
+    width: '100%',
+    height: '100%',
+    margin: 0,
+    minScale: 1,
+    maxScale: 1,
+    controls: true,
+    controlsLayout: 'edges',
+    progress: true,
+    history: true,
+    disableLayout: true,
+  });
+</script>
+</body>
+</html>
